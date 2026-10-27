@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1120" />
+  <meta name="description" content="FinTrack loan operations and repayment dashboard" />
+  <title>FinTrack | Loan Management</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">F<span>+</span></div><div><strong>FinTrack</strong><small>LOAN OPERATIONS</small></div></div>
+    <nav>
+      <button class="nav-link active" data-view="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-link" data-view="applications">▤ <span>Applications</span></button>
+      <button class="nav-link" data-view="customers">♙ <span>Customers</span></button>
+      <button class="nav-link" data-view="loans">◷ <span>Active loans & EMIs</span></button>
+      <button class="nav-link" data-view="payments">⇄ <span>Payments</span></button>
+    </nav>
+    <div class="sidebar-bottom"><span class="online-dot"></span> Local database connected<br><small>Development environment</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><p class="eyebrow">FINTRACK  /  LOAN OPERATIONS</p><h1 id="page-title">Dashboard overview</h1></div><div class="top-actions"><span class="today" id="today"></span><button class="primary" id="quick-apply">＋ New application</button></div></header>
+    <div id="toast" class="toast" role="status"></div>
+    <section id="view-dashboard" class="view">
+      <div class="welcome"><div><p class="eyebrow light">OVERVIEW AT A GLANCE</p><h2>Clarity for every lending decision.</h2><p>Your loan portfolio, applications and repayments — all in one workspace.</p></div><div class="welcome-mark"><span>₹</span><small>FINANCIAL<br/>OVERVIEW</small></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Total customers</span><strong id="stat-customers">—</strong><small>Registered profiles</small></article>
+        <article class="stat-card"><span>Loan applications</span><strong id="stat-applications">—</strong><small>All submitted applications</small></article>
+        <article class="stat-card"><span>Awaiting review</span><strong id="stat-pending">—</strong><small>Pending decisions</small></article>
+        <article class="stat-card"><span>Active outstanding</span><strong id="stat-outstanding">—</strong><small>Across active loans</small></article>
+      </div>
+      <div class="panel"><div class="panel-heading"><div><h3>Recent applications</h3><p>Latest requests submitted to the system</p></div><button class="text-button" data-goto="applications">View all →</button></div><div class="table-wrap"><table><thead><tr><th>Application</th><th>Customer</th><th>Loan purpose</th><th>Requested amount</th><th>Status</th><th>Applied on</th></tr></thead><tbody id="recent-apps"></tbody></table></div></div>
+    </section>
+    <section id="view-applications" class="view hidden">
+      <div class="toolbar"><div><h2>Loan applications</h2><p>Review requests and record decisions.</p></div><button class="primary" id="new-application">＋ New application</button></div>
+      <div class="filters"><input id="application-search" placeholder="Search name, application or customer ID…" /><select id="status-filter"><option>All</option><option>Pending</option><option>Approved</option><option>Rejected</option></select><button class="secondary" id="refresh-apps">Refresh</button></div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Customer</th><th>Purpose</th><th>Amount</th><th>Applied</th><th>Status</th><th>Actions</th></tr></thead><tbody id="applications-table"></tbody></table></div></div>
+    </section>
+    <section id="view-customers" class="view hidden">
+      <div class="toolbar"><div><h2>Customers</h2><p>Manage customer profiles and income details.</p></div><button class="primary" id="new-customer">＋ Add customer</button></div>
+      <div class="filters"><input id="customer-search" placeholder="Search customer name or ID…" /><button class="secondary" id="refresh-customers">Refresh</button></div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>Customer ID</th><th>Name</th><th>Annual income</th><th>Phone</th><th>Email</th><th>Address</th></tr></thead><tbody id="customers-table"></tbody></table></div></div>
+    </section>
+    <section id="view-loans" class="view hidden">
+      <div class="toolbar"><div><h2>Active loans & EMI schedules</h2><p>Approved loans and their installment plans.</p></div><button class="secondary" id="refresh-loans">Refresh</button></div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>Loan ID</th><th>Customer</th><th>Principal</th><th>Rate</th><th>Tenure</th><th>Monthly EMI</th><th>Outstanding</th><th>Schedule</th></tr></thead><tbody id="loans-table"></tbody></table></div></div>
+      <div id="emi-panel" class="panel hidden"><div class="panel-heading"><div><h3 id="emi-title">EMI schedule</h3><p>Record a payment against an installment.</p></div><button class="secondary" id="close-emi">Close</button></div><div class="table-wrap"><table><thead><tr><th>Installment</th><th>Due date</th><th>EMI</th><th>Paid</th><th>Status</th><th>Action</th></tr></thead><tbody id="emi-table"></tbody></table></div></div>
+    </section>
+    <section id="view-payments" class="view hidden">
+      <div class="toolbar"><div><h2>Payment history</h2><p>Recorded EMI payments and references.</p></div><button class="secondary" id="refresh-payments">Refresh</button></div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>Payment ID</th><th>Customer</th><th>Loan / EMI</th><th>Amount</th><th>Method</th><th>Paid at</th><th>Reference</th></tr></thead><tbody id="payments-table"></tbody></table></div></div>
+    </section>
+    <footer><span>© <span id="footer-year"></span> FinTrack</span><span>Demo environment · No real money is moved</span></footer>
+  </main>
+  <dialog id="application-dialog"><form id="application-form" method="dialog"><div class="dialog-head"><div><p class="eyebrow">NEW REQUEST</p><h2>Apply for a loan</h2></div><button type="button" class="icon-button" data-close="application-dialog">✕</button></div><label>Customer<select name="customer_id" id="application-customer" required></select></label><label>Loan amount (₹)<input name="loan_amount" type="number" min="1" step="0.01" placeholder="50000" required /></label><label>Loan purpose<input name="loan_purpose" maxlength="100" placeholder="Education, medical, home…" required /></label><div class="form-note">New applications are saved with Pending status. Loan approval is a manual demo workflow.</div><div class="dialog-actions"><button type="button" class="secondary" data-close="application-dialog">Cancel</button><button class="primary" type="submit">Submit application</button></div></form></dialog>
+  <dialog id="customer-dialog"><form id="customer-form" method="dialog"><div class="dialog-head"><div><p class="eyebrow">CUSTOMER PROFILE</p><h2>Add a customer</h2></div><button type="button" class="icon-button" data-close="customer-dialog">✕</button></div><label>Full name<input name="customer_name" minlength="2" maxlength="100" required /></label><label>Monthly income (₹)<input name="income" type="number" min="0" step="0.01" required /></label><label>Phone<input name="phone" maxlength="20" /></label><label>Email<input name="email" type="email" maxlength="150" /></label><label>Date of birth<input name="date_of_birth" type="date" /></label><label>Address<textarea name="address" rows="2"></textarea></label><div class="dialog-actions"><button type="button" class="secondary" data-close="customer-dialog">Cancel</button><button class="primary" type="submit">Save customer</button></div></form></dialog>
+  <dialog id="approve-dialog"><form id="approve-form" method="dialog"><div class="dialog-head"><div><p class="eyebrow">LOAN DECISION</p><h2>Approve application</h2></div><button type="button" class="icon-button" data-close="approve-dialog">✕</button></div><input type="hidden" name="application_id" /><p class="form-note">Approval creates a loan record and an EMI schedule. This is a demonstration workflow, not an actual credit decision.</p><label>Annual interest rate (%)<input name="annual_interest_rate" type="number" min="0" max="100" step="0.01" value="10" required /></label><label>Tenure (months)<input name="tenure_months" type="number" min="1" max="360" step="1" value="12" required /></label><div class="dialog-actions"><button type="button" class="secondary" data-close="approve-dialog">Cancel</button><button class="primary" type="submit">Approve & create schedule</button></div></form></dialog>
+  <dialog id="payment-dialog"><form id="payment-form" method="dialog"><div class="dialog-head"><div><p class="eyebrow">REPAYMENT</p><h2>Record EMI payment</h2></div><button type="button" class="icon-button" data-close="payment-dialog">✕</button></div><input type="hidden" name="emi_id" /><label>Payment amount (₹)<input name="amount" type="number" min="0.01" step="0.01" required /></label><label>Payment method<select name="payment_method"><option>Manual</option><option>Bank transfer</option><option>UPI (demo)</option><option>Cash</option><option>Cheque</option></select></label><label>Reference note (optional)<input name="reference_note" maxlength="150" /></label><div class="form-note">This records a manual demo entry only. It does not process a real payment.</div><div class="dialog-actions"><button type="button" class="secondary" data-close="payment-dialog">Cancel</button><button class="primary" type="submit">Record payment</button></div></form></dialog>
+  <script src="/static/app.js"></script>
+</body>
+</html>
